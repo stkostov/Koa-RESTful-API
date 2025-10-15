@@ -1,0 +1,1 @@
+export type TokenAssigner = (userId: string) => string;
