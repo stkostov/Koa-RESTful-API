@@ -1,24 +1,26 @@
 import Router from "@koa/router";
-import { User } from "../types/user.type";
 import { SignInSchema } from "../validation/signIn.validation";
 import { TokenAssigner } from "../types/tokenAssigner.type";
+import { Knex } from "knex";
+import { UserDao } from "../daos/user.dao";
 
-export function SignUp(router: Router, users: User[], tokenAssigner: TokenAssigner) {
-    router.post("/sign-in", (ctx) => {
+export function SignIn(db:Knex, router: Router, tokenAssigner: TokenAssigner) {
+    const dao = new UserDao(db)
+    router.post("/sign-in", async (ctx) => {
         try {
             const parsedData = SignInSchema.safeParse(ctx.request.body)
             if (!parsedData.success) return ctx.body = { error: parsedData.error }
 
             const { email, password } = parsedData.data
-            const userExists = users.find(user => user.email === email)
-            const success = userExists?.password == password
+            const user = await dao.findByEmail(email)
+            const success = user?.password == password
             if (!success) {
                 ctx.status = 401
                 ctx.body = { error: "Wrong password!" }
                 return
             }
 
-            const token = tokenAssigner(String(userExists.id))
+            const token = tokenAssigner(String(user.id))
             ctx.status = 201
             ctx.body = {
                 user: {
@@ -28,7 +30,7 @@ export function SignUp(router: Router, users: User[], tokenAssigner: TokenAssign
                 token
             }
         } catch (e) {
-            console.log("NE BACHKA" + e)
+            console.log("sign in aint working..." + e)
         }
     })
 }

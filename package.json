@@ -3,25 +3,33 @@
     "@koa/router": "^14.0.0",
     "@types/koa__router": "^12.0.4",
     "@types/koa-router": "^7.4.8",
+    "dotenv": "^17.2.3",
     "jsonwebtoken": "^9.0.2",
+    "knex": "^3.1.0",
     "koa": "^3.0.1",
     "koa-bodyparser": "^4.4.1",
+    "koa-helmet": "^8.0.1",
     "koa-jwt": "^4.0.4",
     "koa-logger": "4.0.0",
+    "pg": "^8.16.3",
     "ts-node-dev": "^2.0.0",
     "zod": "^4.1.12"
   },
   "scripts": {
     "typeorm": "npx typeorm",
+    "build": "npx tsc",
     "start": "node dist/server.js",
     "dev": "ts-node-dev --respawn --transpile-only src/server.ts"
   },
   "devDependencies": {
     "@types/jsonwebtoken": "^9.0.10",
     "@types/koa": "^3.0.0",
+    "@types/koa__router": "^12.0.4",
     "@types/koa-bodyparser": "^4.3.12",
     "@types/koa-logger": "^3.1.5",
-    "typescript": "^5.9.3"
+    "@types/node": "^24.5.2",
+    "nodemon": "^3.1.10",
+    "typescript": "^5.9.2"
   },
   "name": "koa-restful-api",
   "version": "1.0.0",

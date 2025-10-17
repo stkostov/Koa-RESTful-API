@@ -1,81 +1,88 @@
 import Router from "@koa/router"
-import { Book } from "../types/book.type"
+import type { Book } from "../types/book.type"
 import { CreateBook, UpdateBook } from "../validation/book.validation"
+import type { Knex } from "knex"
+import { BookDao } from "../daos/book.dao"
 
-export function createBooksRoutes(router: Router, books: Book[]) {
-    router.get("/books", (ctx) => {
-        ctx.body = books
+export function createBooksRoutes(db: Knex, router: Router) {
+    const dao = new BookDao(db)
+
+    router.get("/books", async (ctx) => {
+        const rows = await dao.findAll()
+        ctx.body = rows
     })
-    
-    router.get("/books/:id", (ctx) => {
-        const bookId = ctx.params.id
-        if (!bookId) {
+
+    router.get("/books/:id", async (ctx) => {
+        const id = Number(ctx.params.id)
+        if (!Number.isInteger(id) || id <= 0) {
             ctx.status = 400
-            ctx.body = { error: "Book must be provided to be updated."}
-            return 
+            ctx.body = { error: "id must be a positive integer" }
+            return
         }
 
-        ctx.body = books[+bookId]
+        const book = await dao.findById(id)
+        if (!book) {
+            ctx.status = 404
+            ctx.body = { error: "Book not found" }
+            return
+        }
+        ctx.body = book
     })
 
-    router.post("/books", (ctx) => {
-        const parsed = CreateBook.safeParse(ctx.request.body);
+    router.post("/books", async (ctx) => {
+        const parsed = CreateBook.safeParse(ctx.request.body)
         if (!parsed.success) {
-            ctx.status = 400;
-            ctx.body = { error: parsed.error.flatten() };
-            return;
+            ctx.status = 400
+            ctx.body = { error: "Invalid payload", details: parsed.error }
+            return
         }
-        const { name, author, date } = ctx.request.body as Book
-        const id = 1 + books.length
-        const b = { id, name, date, author }
-        books.push(b)
+
+        const payload = parsed.data as Omit<Book, "id">
+
+        const created = await dao.create(payload)
         ctx.status = 201
-        ctx.body = b
+        ctx.body = created
     })
 
-    router.patch("/books/:id", (ctx) => {
-        const bookId = ctx.params.id
-        if (!bookId) {
+    router.patch("/books/:id", async (ctx) => {
+        const id = Number(ctx.params.id)
+        if (!Number.isInteger(id) || id <= 0) {
             ctx.status = 400
-            ctx.body = { error: "Book must be provided to be updated."}
-            return 
+            ctx.body = { error: "id must be a positive integer" }
+            return
         }
 
-        const p = UpdateBook.safeParse(ctx.request.body);
-        if (!p.success) { 
+        const parsed = UpdateBook.safeParse(ctx.request.body)
+        if (!parsed.success) {
             ctx.status = 400
-            ctx.body = { error: "Something is wrong" }
-            return 
+            ctx.body = { error: "Invalid payload", details: parsed.error }
+            return
         }
 
-
-        const idx = books.findIndex((b) => b.id === +bookId)
-        if (idx === -1) { 
-            ctx.status = 404 
-            ctx.body = { error: "Not found" } 
-            return 
+        const patch = parsed.data as Partial<Omit<Book, "id">>
+        const updated = await dao.update(id, patch)
+        if (!updated) {
+            ctx.status = 404
+            ctx.body = { error: "Book not found" }
+            return
         }
-
-        books[idx] = { ...books[idx], ...(ctx.request.body as Partial<Book>) } as Book
-        ctx.body = books[idx]
+        ctx.body = updated
     })
 
-    router.delete("/books/:id", (ctx) => {
-        const bookId = ctx.params.id
-        if (!bookId) {
+    router.delete("/books/:id", async (ctx) => {
+        const id = Number(ctx.params.id)
+        if (!Number.isInteger(id) || id <= 0) {
             ctx.status = 400
-            ctx.body = { error: "Book must be provided to be updated."}
-            return 
+            ctx.body = { error: "id must be a positive integer" }
+            return
         }
 
-        const idx = books.findIndex((b) => b.id === +bookId)
-        if (idx === -1) { 
-            ctx.status = 404 
-            ctx.body = { error: "Not found" } 
-            return 
+        const count = await dao.delete(id)
+        if (count === 0) {
+            ctx.status = 404
+            ctx.body = { error: "Book not found" }
+            return
         }
-        
-        const [removed] = books.splice(idx, 1)
-        ctx.body = removed
+        ctx.status = 204
     })
 }

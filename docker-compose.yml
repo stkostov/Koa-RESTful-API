@@ -1,0 +1,32 @@
+services:
+  pg:
+    image: postgres
+    container_name: postgres
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: 12345678
+      POSTGRES_DB: books_store
+    ports:
+      - "5433:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  api:
+    build: .
+    image: koa-ts-api:latest
+    container_name: koa-ts-api
+    environment:
+      NODE_ENV: production
+      PORT: 4000
+      JWT_SECRET: "super-secret"
+      POSTGRES_HOST: pg
+      POSTGRES_DB_PORT: "5432"
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: 12345678
+      POSTGRES_DB: books_store
+    ports:
+      - "4000:4000"
+    restart: unless-stopped
+
+volumes: 
+  pgdata: {}
