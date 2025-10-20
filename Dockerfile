@@ -1,19 +1,20 @@
-FROM node:20-alpine AS builder
+ARG BASE=cgr.dev/chainguard/node:latest
+FROM ${BASE} AS builder
 WORKDIR /app
 
 COPY package*.json ./
-RUN npm install
+RUN npm ci
 
 COPY tsconfig.json ./
 COPY . .
 
 RUN npm run build
 
-FROM node:20-alpine AS runner
+FROM ${BASE} AS runner
 WORKDIR /app
 
 COPY package*.json ./
-RUN npm install
+RUN npm ci
 
 COPY --from=builder /app/dist ./dist
 
@@ -22,4 +23,4 @@ EXPOSE 4000
 ENV PORT=4000
 ENV SECRET=super-secret
 
-CMD ["node", "dist/server.js"]
+CMD ["dist/server.js"]

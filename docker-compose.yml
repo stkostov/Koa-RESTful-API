@@ -1,6 +1,6 @@
 services:
   pg:
-    image: postgres
+    image: cgr.dev/chainguard/postgres:latest
     container_name: postgres
     environment:
       POSTGRES_USER: user
