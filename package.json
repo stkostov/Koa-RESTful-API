@@ -18,6 +18,8 @@
   "scripts": {
     "test": "jest --watch",
     "test-coverage": "jest --collectCoverage",
+    "migrate": "knex migrate:latest",
+    "seed": "knex seed:run",
     "typeorm": "npx typeorm",
     "build": "npx tsc",
     "start": "node dist/server.js",
