@@ -1,0 +1,473 @@
+{
+	"info": {
+		"_postman_id": "49163635-cbf609d5-c5a8-4875-939d-f98375d0a8a3",
+		"name": "Koa API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Sign-Up",
+			"id": "49163635-0b221135-3cf9-41c2-861d-9c3c68d6c4ef",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{ \"username\": \"alicein\", \"email\": \"alice@example.com\", \"password\": \"secret123\" }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/sign-up",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"sign-up"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Sign-In",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "64c96cc9-a5d0-4b43-9e20-163660287ca4",
+						"exec": [
+							"const j = pm.response.json();",
+							"pm.environment.set(\"token\", j.token); // adjust if your shape is { auth: { token: ... } }",
+							"pm.test(\"Token saved\", () => pm.expect(pm.environment.get(\"token\")).to.be.ok);"
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"id": "49163635-965da91f-9d6f-4489-8882-5c0aa40cdf27",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{ \"email\": \"alice@example.com\", \"password\": \"secret123\" }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/sign-in",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"sign-in"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "CreateBook",
+			"id": "49163635-da51c54c-baea-4c87-acdf-4b598a7449a3",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{ \"name\": \"Clean Architecture\", \"author\": \"Robert C. Martin\", \"date\": \"2017\" }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:4000/books",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "4000",
+					"path": [
+						"books"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "List-Books",
+			"id": "49163635-cb63e312-ee81-4b98-9315-7618979c90ac",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{baseUrl}}/books",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"books"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "List-Users",
+			"id": "49163635-62b60b04-4e5a-4953-afbe-03daa1f4a070",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/users",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get-Book",
+			"id": "49163635-9deaf883-90cb-46bb-8f1d-3c2dcb7f48e0",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/books/4",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"books",
+						"4"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Assign-Book",
+			"id": "49163635-6d7e8830-1e2e-4366-8e81-5aeba6b95c97",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/user/3/book/5",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"user",
+						"3",
+						"book",
+						"5"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get-User-Books Copy",
+			"id": "49163635-8c47e2f1-a2e6-4067-a0d3-74dd43bd12e0",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/user-books/3",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"user-books",
+						"3"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update-Books-User",
+			"id": "49163635-6d05d249-49e6-4a35-8443-afbe162d762c",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{ \"newUserId\": 4 }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/user/3/book/2",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"user",
+						"3",
+						"book",
+						"2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get-User-Books",
+			"id": "49163635-214bb09f-fc70-48d8-9d21-1326233b8a3d",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/user-books/3",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"user-books",
+						"3"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Remove-Book-User",
+			"id": "49163635-e0f3cf58-1252-48c5-a2e5-e032fd66f0e4",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/user/3/book/5",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"user",
+						"3",
+						"book",
+						"5"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get-User-Books Copy",
+			"id": "49163635-96c7d830-1d37-4fd2-b3c6-63777e48b09a",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/user-books/3",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"user-books",
+						"3"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update-Book",
+			"id": "49163635-32e89acd-c1e4-4061-b822-45283c55fc42",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{ \"name\": \"Clean Architecture\", \"author\": \"Robert C. Martin\", \"date\": \"2018\" }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/books/4",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"books",
+						"4"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete-Book",
+			"id": "49163635-d4f4e7d2-88b5-40c9-93f3-434e62b29d6c",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{baseUrl}}/books/3",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"books",
+						"3"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{token}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "5c8468a7-2664-42b3-beb1-0f01c3533b81",
+				"type": "text/javascript",
+				"packages": {},
+				"requests": {},
+				"exec": [
+					"const t = pm.environment.get(\"token\");",
+					"if (t) {",
+					"  pm.request.headers.add({ key: \"Authorization\", value: `Bearer ${t}` });",
+					"}"
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "c23bf0bf-ec17-41e8-a05b-739cef480909",
+				"type": "text/javascript",
+				"packages": {},
+				"requests": {},
+				"exec": [
+					"const json = pm.response.json();",
+					"if (json.token) {",
+					"  pm.environment.set(\"token\", json.token);",
+					"  pm.test(\"Saved JWT to env\", () => pm.expect(pm.environment.get(\"token\")).to.be.a(\"string\"));",
+					"}"
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": ""
+		},
+		{
+			"key": "token",
+			"value": ""
+		}
+	]
+}
