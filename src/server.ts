@@ -27,13 +27,13 @@ app.use(logger())
 
 SignUp(new UserDao(db), router)
 SignIn(new UserDao(db), router, (userId: string) =>
-  jsonwebtoken.sign({ sub: userId }, SECRET, { expiresIn: "7H" })
+    jsonwebtoken.sign({ sub: userId }, SECRET, { expiresIn: "7H" })
 )
 
 // ===== protected border ======
 app.use(
-  jwt({ secret: SECRET, passthrough: false })
-    .unless({ path: [/^\/sign-up$/, /^\/sign-in$/] })
+    jwt({ secret: SECRET, passthrough: false })
+        .unless({ path: [/^\/sign-up$/, /^\/sign-in$/] })
 )
 
 createUsersRoutes(new UserDao(db), router)
