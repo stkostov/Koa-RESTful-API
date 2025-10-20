@@ -1,7 +1,8 @@
 // src/http/usersBooks.routes.ts
 import Router from "@koa/router"
+import { UserBooksDaoInterface } from "../interfaces/userBooksDao.interface"
 
-export function createUsersBooksRoutes(dao: any, router: Router) {
+export function createUsersBooksRoutes(dao: UserBooksDaoInterface, router: Router) {
 
   router.post("/user/:userId/book/:bookId", async (ctx) => {
     const userId = Number(ctx.params.userId)

@@ -1,8 +1,9 @@
 import Router from "@koa/router";
 import { SignInSchema } from "../validation/signIn.validation";
 import { TokenAssigner } from "../types/tokenAssigner.type";
+import { UserDaoInterface } from "../interfaces/userDao.interface";
 
-export function SignIn(dao: any, router: Router, tokenAssigner: TokenAssigner) {
+export function SignIn(dao: Pick<UserDaoInterface, 'findByEmail'>, router: Router, tokenAssigner: TokenAssigner) {
     router.post("/sign-in", async (ctx) => {
         try {
             const parsedData = SignInSchema.safeParse(ctx.request.body)

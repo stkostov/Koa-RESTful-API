@@ -3,9 +3,10 @@ import Router from "@koa/router"
 import bodyParser from "koa-bodyparser"
 import request from "supertest"
 import { SignUp } from "../routes/signUp.route"
+import { UserDaoInterface } from "../interfaces/userDao.interface"
 
 describe("sign-up (mocked DAO)", () => {
-  function buildApp(daoMock: jest.Mocked<any>) {
+  function buildApp(daoMock: jest.Mocked<Pick<UserDaoInterface, 'findByEmail' | 'create'>>) {
     const app = new Koa()
     const router = new Router()
     app.use(bodyParser())
@@ -22,10 +23,10 @@ describe("sign-up (mocked DAO)", () => {
 
   it("should return 201 when user is created", async () => {
     const created = [{ id: 1, email: validPayload.email, username: validPayload.username }]
-    const daoMock: jest.Mocked<any> = {
+    const daoMock: jest.Mocked<Pick<UserDaoInterface, 'findByEmail' | 'create'>> = {
       findByEmail: jest.fn().mockResolvedValue(undefined),
       create: jest.fn().mockResolvedValue(created),
-    } as any
+    }
 
     const app = buildApp(daoMock)
     const res = await request(app.callback()).post("/sign-up").send(validPayload)
@@ -38,10 +39,10 @@ describe("sign-up (mocked DAO)", () => {
 
   it("should throw 409 when email already exists", async () => {
     const existing = { id: 42, email: validPayload.email }
-    const daoMock: jest.Mocked<any> = {
+    const daoMock: jest.Mocked<Pick<UserDaoInterface, 'findByEmail' | 'create'>> = {
       findByEmail: jest.fn().mockResolvedValue(existing),
       create: jest.fn(),
-    } as any
+    }
 
     const app = buildApp(daoMock)
     const res = await request(app.callback()).post("/sign-up").send(validPayload)

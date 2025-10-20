@@ -3,9 +3,10 @@ import Router from "@koa/router"
 import bodyParser from "koa-bodyparser"
 import request from "supertest"
 import { createUsersRoutes } from "../routes/user.route"
+import { UserDaoInterface } from "../interfaces/userDao.interface"
 
 describe("User routes (mocked DAO)", () => {
-  function buildApp(daoMock: jest.Mocked<any>) {
+  function buildApp(daoMock: jest.Mocked<UserDaoInterface>) {
     const app = new Koa()
     const router = new Router()
     app.use(bodyParser())
@@ -19,9 +20,10 @@ describe("User routes (mocked DAO)", () => {
   const userBooks = [{ date: "1900", name: "Mock Book", author: "Mock Mocker" }]
 
   it("should return all users", async () => {
-    const daoMock: jest.Mocked<any> = {
+    const daoMock: jest.Mocked<UserDaoInterface> = {
       findAll: jest.fn().mockResolvedValue(userArray),
       findById: jest.fn(),
+      findByEmail: jest.fn(),
       findUserBooks: jest.fn(),
       create: jest.fn(),
       update: jest.fn(),
@@ -36,9 +38,10 @@ describe("User routes (mocked DAO)", () => {
   })
 
   it("should get user by id", async () => {
-    const daoMock: jest.Mocked<any> = {
+    const daoMock: jest.Mocked<UserDaoInterface> = {
       findAll: jest.fn(),
       findById: jest.fn().mockResolvedValue(fakeUser),
+      findByEmail: jest.fn(),
       findUserBooks: jest.fn(),
       create: jest.fn(),
       update: jest.fn(),
@@ -53,9 +56,10 @@ describe("User routes (mocked DAO)", () => {
   })
 
   it("should throw 400 on invalid id (get user)", async () => {
-    const daoMock: jest.Mocked<any> = {
+    const daoMock: jest.Mocked<UserDaoInterface> = {
       findAll: jest.fn(),
       findById: jest.fn(),
+      findByEmail: jest.fn(),
       findUserBooks: jest.fn(),
       create: jest.fn(),
       update: jest.fn(),
@@ -70,9 +74,10 @@ describe("User routes (mocked DAO)", () => {
   })
 
   it("should throw 404 when user not found", async () => {
-    const daoMock: jest.Mocked<any> = {
+    const daoMock: jest.Mocked<UserDaoInterface> = {
       findAll: jest.fn(),
       findById: jest.fn().mockResolvedValue(undefined),
+      findByEmail: jest.fn(),
       findUserBooks: jest.fn(),
       create: jest.fn(),
       update: jest.fn(),
@@ -87,9 +92,10 @@ describe("User routes (mocked DAO)", () => {
   })
 
   it("should get user books", async () => {
-    const daoMock: jest.Mocked<any> = {
+    const daoMock: jest.Mocked<UserDaoInterface> = {
       findAll: jest.fn(),
       findById: jest.fn(),
+      findByEmail: jest.fn(),
       findUserBooks: jest.fn().mockResolvedValue(userBooks),
       create: jest.fn(),
       update: jest.fn(),
@@ -104,9 +110,10 @@ describe("User routes (mocked DAO)", () => {
   })
 
   it("should throw 400 on invalid id (user books)", async () => {
-    const daoMock: jest.Mocked<any> = {
+    const daoMock: jest.Mocked<UserDaoInterface> = {
       findAll: jest.fn(),
       findById: jest.fn(),
+      findByEmail: jest.fn(),
       findUserBooks: jest.fn(),
       create: jest.fn(),
       update: jest.fn(),
@@ -121,9 +128,10 @@ describe("User routes (mocked DAO)", () => {
   })
 
   it("should throw 404 when user has no books or not found", async () => {
-    const daoMock: jest.Mocked<any> = {
+    const daoMock: jest.Mocked<UserDaoInterface> = {
       findAll: jest.fn(),
       findById: jest.fn(),
+      findByEmail: jest.fn(),
       findUserBooks: jest.fn().mockResolvedValue([]),
       create: jest.fn(),
       update: jest.fn(),
@@ -141,9 +149,10 @@ describe("User routes (mocked DAO)", () => {
     const createPayload = { email: "fake@abv.bg", username: "oaoskwss", password: "dsaowksla" }
     const created = [{ id: 2, ...createPayload }]
 
-    const daoMock: jest.Mocked<any> = {
+    const daoMock: jest.Mocked<UserDaoInterface> = {
       findAll: jest.fn(),
       findById: jest.fn(),
+      findByEmail: jest.fn(),
       findUserBooks: jest.fn(),
       create: jest.fn().mockResolvedValue(created),
       update: jest.fn(),
@@ -158,9 +167,10 @@ describe("User routes (mocked DAO)", () => {
   })
 
   it("should throw 400 on invalid create payload", async () => {
-    const daoMock: jest.Mocked<any> = {
+    const daoMock: jest.Mocked<UserDaoInterface> = {
       findAll: jest.fn(),
       findById: jest.fn(),
+      findByEmail: jest.fn(),
       findUserBooks: jest.fn(),
       create: jest.fn(),
       update: jest.fn(),
@@ -178,9 +188,10 @@ describe("User routes (mocked DAO)", () => {
     const patch = { email: "updated@yu.com" }
     const updatedArray = [{ ...fakeUser, ...patch }]
 
-    const daoMock: jest.Mocked<any> = {
+    const daoMock: jest.Mocked<UserDaoInterface> = {
       findAll: jest.fn(),
       findById: jest.fn(),
+      findByEmail: jest.fn(),
       findUserBooks: jest.fn(),
       create: jest.fn(),
       update: jest.fn().mockResolvedValue(updatedArray),
@@ -195,9 +206,10 @@ describe("User routes (mocked DAO)", () => {
   })
 
   it("should throw 400 on invalid id (update user)", async () => {
-    const daoMock: jest.Mocked<any> = {
+    const daoMock: jest.Mocked<UserDaoInterface> = {
       findAll: jest.fn(),
       findById: jest.fn(),
+      findByEmail: jest.fn(),
       findUserBooks: jest.fn(),
       create: jest.fn(),
       update: jest.fn(),
@@ -212,9 +224,10 @@ describe("User routes (mocked DAO)", () => {
   })
 
   it("should throw 400 on invalid update payload", async () => {
-    const daoMock: jest.Mocked<any> = {
+    const daoMock: jest.Mocked<UserDaoInterface> = {
       findAll: jest.fn(),
       findById: jest.fn(),
+      findByEmail: jest.fn(),
       findUserBooks: jest.fn(),
       create: jest.fn(),
       update: jest.fn(),
@@ -229,9 +242,10 @@ describe("User routes (mocked DAO)", () => {
   })
 
   it("should throw 404 when updating non-existing user", async () => {
-    const daoMock: jest.Mocked<any> = {
+    const daoMock: jest.Mocked<UserDaoInterface> = {
       findAll: jest.fn(),
       findById: jest.fn(),
+      findByEmail: jest.fn(),
       findUserBooks: jest.fn(),
       create: jest.fn(),
       update: jest.fn().mockResolvedValue([]),
@@ -246,9 +260,10 @@ describe("User routes (mocked DAO)", () => {
   })
 
   it("should throw 400 on invalid id (delete user)", async () => {
-    const daoMock: jest.Mocked<any> = {
+    const daoMock: jest.Mocked<UserDaoInterface> = {
       findAll: jest.fn(),
       findById: jest.fn(),
+      findByEmail: jest.fn(),
       findUserBooks: jest.fn(),
       create: jest.fn(),
       update: jest.fn(),
@@ -263,9 +278,10 @@ describe("User routes (mocked DAO)", () => {
   })
 
   it("should throw 404 when delete target not found", async () => {
-    const daoMock: jest.Mocked<any> = {
+    const daoMock: jest.Mocked<UserDaoInterface> = {
       findAll: jest.fn(),
       findById: jest.fn(),
+      findByEmail: jest.fn(),
       findUserBooks: jest.fn(),
       create: jest.fn(),
       update: jest.fn(),
@@ -280,9 +296,10 @@ describe("User routes (mocked DAO)", () => {
   })
 
   it("should delete user", async () => {
-    const daoMock: jest.Mocked<any> = {
+    const daoMock: jest.Mocked<UserDaoInterface> = {
       findAll: jest.fn(),
       findById: jest.fn(),
+      findByEmail: jest.fn(),
       findUserBooks: jest.fn(),
       create: jest.fn(),
       update: jest.fn(),

@@ -1,7 +1,8 @@
 import Router from "@koa/router"
 import { SignUpSchema } from "../validation/signUp.validation"
+import { UserDaoInterface } from "../interfaces/userDao.interface"
 
-export function SignUp(dao: any, router: Router) {
+export function SignUp(dao: Pick<UserDaoInterface, 'findByEmail' | 'create'>, router: Router) {
     router.post("/sign-up", async (ctx) => {
         try {
             const parsedData = SignUpSchema.safeParse(ctx.request.body)

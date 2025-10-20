@@ -1,8 +1,9 @@
 import Router from "@koa/router"
 import type { Book } from "../types/book.type"
 import { CreateBook, UpdateBook } from "../validation/book.validation"
+import { BookDaoInterface } from "../interfaces/bookDao.interface"
 
-export function createBooksRoutes(dao: any, router: Router) {
+export function createBooksRoutes(dao: BookDaoInterface, router: Router) {
 
     router.get("/books", async (ctx) => {
         const rows = await dao.findAll()

@@ -2,8 +2,9 @@
 import Router from "@koa/router"
 import type { Context } from "koa"
 import { SignUpSchema, UpdateUser } from "../validation/signUp.validation"
+import { UserDaoInterface } from "../interfaces/userDao.interface"
 
-export function createUsersRoutes(dao: any, router: Router) {
+export function createUsersRoutes(dao: UserDaoInterface, router: Router) {
   router.get("/users", async (ctx) => {
     const rows = await dao.findAll()
     ctx.status = 200

@@ -4,9 +4,10 @@ import bodyParser from "koa-bodyparser"
 import request from "supertest"
 import { createBooksRoutes } from "../routes/book.route"
 import type { Book } from "../types/book.type"
+import { BookDaoInterface } from "../interfaces/bookDao.interface"
 
 describe("Book routes (mocked DAO)", () => {
-  function buildApp(daoMock: jest.Mocked<any>) {
+  function buildApp(daoMock: jest.Mocked<BookDaoInterface>) {
     const app = new Koa()
     const router = new Router()
     app.use(bodyParser())
@@ -20,7 +21,7 @@ describe("Book routes (mocked DAO)", () => {
   const updatedArray = [{ id: 1, name: "Mock Book", date: "2000", author: "Mock Mocker" }]
 
   it("should return all books", async () => {
-    const daoMock: jest.Mocked<any> = {
+    const daoMock: jest.Mocked<BookDaoInterface> = {
       findAll: jest.fn().mockResolvedValue([fakeBook]),
       findById: jest.fn(),
       create: jest.fn(),
@@ -36,7 +37,7 @@ describe("Book routes (mocked DAO)", () => {
   })
 
   it("should get a book by id", async () => {
-    const daoMock: jest.Mocked<any> = {
+    const daoMock: jest.Mocked<BookDaoInterface> = {
       findAll: jest.fn(),
       findById: jest.fn().mockResolvedValue(fakeBook),
       create: jest.fn(),
@@ -52,7 +53,7 @@ describe("Book routes (mocked DAO)", () => {
   })
 
   it("should get error on wrong id (get book)", async () => {
-    const daoMock: jest.Mocked<any> = {
+    const daoMock: jest.Mocked<BookDaoInterface> = {
       findAll: jest.fn(),
       findById: jest.fn(),
       create: jest.fn(),
@@ -68,7 +69,7 @@ describe("Book routes (mocked DAO)", () => {
   })
 
   it("should 404 when book not found (get by id)", async () => {
-    const daoMock: jest.Mocked<any> = {
+    const daoMock: jest.Mocked<BookDaoInterface> = {
       findAll: jest.fn(),
       findById: jest.fn().mockResolvedValue(undefined),
       create: jest.fn(),
@@ -85,7 +86,7 @@ describe("Book routes (mocked DAO)", () => {
 
   it("should create a book", async () => {
     const created = [{ id: 2, ...createPayload }]
-    const daoMock: jest.Mocked<any> = {
+    const daoMock: jest.Mocked<BookDaoInterface> = {
       findAll: jest.fn(),
       findById: jest.fn(),
       create: jest.fn().mockResolvedValue(created),
@@ -101,7 +102,7 @@ describe("Book routes (mocked DAO)", () => {
   })
 
   it("should 400 on invalid create payload", async () => {
-    const daoMock: jest.Mocked<any> = {
+    const daoMock: jest.Mocked<BookDaoInterface> = {
       findAll: jest.fn(),
       findById: jest.fn(),
       create: jest.fn(),
@@ -118,7 +119,7 @@ describe("Book routes (mocked DAO)", () => {
 
   it("should update a book", async () => {
     const patch = { date: "2000" }
-    const daoMock: jest.Mocked<any> = {
+    const daoMock: jest.Mocked<BookDaoInterface> = {
       findAll: jest.fn(),
       findById: jest.fn(),
       create: jest.fn(),
@@ -134,7 +135,7 @@ describe("Book routes (mocked DAO)", () => {
   })
 
   it("should 400 on wrong id (update book)", async () => {
-    const daoMock: jest.Mocked<any> = {
+    const daoMock: jest.Mocked<BookDaoInterface> = {
       findAll: jest.fn(),
       findById: jest.fn(),
       create: jest.fn(),
@@ -150,7 +151,7 @@ describe("Book routes (mocked DAO)", () => {
   })
 
   it("should 400 on invalid update payload", async () => {
-    const daoMock: jest.Mocked<any> = {
+    const daoMock: jest.Mocked<BookDaoInterface> = {
       findAll: jest.fn(),
       findById: jest.fn(),
       create: jest.fn(),
@@ -166,7 +167,7 @@ describe("Book routes (mocked DAO)", () => {
   })
 
   it("should 404 when updating non-existing book", async () => {
-    const daoMock: jest.Mocked<any> = {
+    const daoMock: jest.Mocked<BookDaoInterface> = {
       findAll: jest.fn(),
       findById: jest.fn(),
       create: jest.fn(),
@@ -182,7 +183,7 @@ describe("Book routes (mocked DAO)", () => {
   })
 
   it("should 400 on wrong id (delete book)", async () => {
-    const daoMock: jest.Mocked<any> = {
+    const daoMock: jest.Mocked<BookDaoInterface> = {
       findAll: jest.fn(),
       findById: jest.fn(),
       create: jest.fn(),
@@ -198,7 +199,7 @@ describe("Book routes (mocked DAO)", () => {
   })
 
   it("should 404 on delete when book not found", async () => {
-    const daoMock: jest.Mocked<any> = {
+    const daoMock: jest.Mocked<BookDaoInterface> = {
       findAll: jest.fn(),
       findById: jest.fn(),
       create: jest.fn(),
@@ -214,7 +215,7 @@ describe("Book routes (mocked DAO)", () => {
   })
 
   it("should delete a book", async () => {
-    const daoMock: jest.Mocked<any> = {
+    const daoMock: jest.Mocked<BookDaoInterface> = {
       findAll: jest.fn(),
       findById: jest.fn(),
       create: jest.fn(),

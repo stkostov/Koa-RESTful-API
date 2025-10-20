@@ -3,9 +3,10 @@ import Router from "@koa/router"
 import bodyParser from "koa-bodyparser"
 import request from "supertest"
 import { createUsersBooksRoutes } from "../routes/userBooks.route"
+import { UserBooksDaoInterface } from "../interfaces/userBooksDao.interface"
 
 describe("UserBooks routes (mocked DAO)", () => {
-  function buildApp(daoMock: jest.Mocked<any>) {
+  function buildApp(daoMock: jest.Mocked<UserBooksDaoInterface>) {
     const app = new Koa()
     const router = new Router()
     app.use(bodyParser())
@@ -18,7 +19,7 @@ describe("UserBooks routes (mocked DAO)", () => {
   const updatedArray = [{ user_id: 5, book_id: 2 }]
 
   it("should assign a book to user", async () => {
-    const daoMock: jest.Mocked<any> = {
+    const daoMock: jest.Mocked<UserBooksDaoInterface> = {
       assignBookToUser: jest.fn().mockResolvedValue(assignedArray),
       updateBooksUser: jest.fn(),
       removeBookFromUser: jest.fn(),
@@ -32,7 +33,7 @@ describe("UserBooks routes (mocked DAO)", () => {
   })
 
   it("should throw 400 on invalid ids for assign", async () => {
-    const daoMock: jest.Mocked<any> = {
+    const daoMock: jest.Mocked<UserBooksDaoInterface> = {
       assignBookToUser: jest.fn(),
       updateBooksUser: jest.fn(),
       removeBookFromUser: jest.fn(),
@@ -46,7 +47,7 @@ describe("UserBooks routes (mocked DAO)", () => {
   })
 
   it("should throw 409 when assignment already exists", async () => {
-    const daoMock: jest.Mocked<any> = {
+    const daoMock: jest.Mocked<UserBooksDaoInterface> = {
       assignBookToUser: jest.fn().mockResolvedValue([]), 
       updateBooksUser: jest.fn(),
       removeBookFromUser: jest.fn(),
@@ -60,7 +61,7 @@ describe("UserBooks routes (mocked DAO)", () => {
   })
 
   it("should reassign a book to a new user", async () => {
-    const daoMock: jest.Mocked<any> = {
+    const daoMock: jest.Mocked<UserBooksDaoInterface> = {
       assignBookToUser: jest.fn(),
       updateBooksUser: jest.fn().mockResolvedValue(updatedArray),
       removeBookFromUser: jest.fn(),
@@ -77,7 +78,7 @@ describe("UserBooks routes (mocked DAO)", () => {
   })
 
   it("should throw 400 when ids/body invalid on reassign", async () => {
-    const daoMock: jest.Mocked<any> = {
+    const daoMock: jest.Mocked<UserBooksDaoInterface> = {
       assignBookToUser: jest.fn(),
       updateBooksUser: jest.fn(),
       removeBookFromUser: jest.fn(),
@@ -96,7 +97,7 @@ describe("UserBooks routes (mocked DAO)", () => {
   })
 
   it("should throw 400 when newUserId missing", async () => {
-    const daoMock: jest.Mocked<any> = {
+    const daoMock: jest.Mocked<UserBooksDaoInterface> = {
       assignBookToUser: jest.fn(),
       updateBooksUser: jest.fn(),
       removeBookFromUser: jest.fn(),
@@ -112,7 +113,7 @@ describe("UserBooks routes (mocked DAO)", () => {
   })
 
   it("should throw 404 when reassign target not found", async () => {
-    const daoMock: jest.Mocked<any> = {
+    const daoMock: jest.Mocked<UserBooksDaoInterface> = {
       assignBookToUser: jest.fn(),
       updateBooksUser: jest.fn().mockResolvedValue(0),
       removeBookFromUser: jest.fn(),
@@ -129,7 +130,7 @@ describe("UserBooks routes (mocked DAO)", () => {
   })
 
   it("should throw 400 on invalid ids for delete", async () => {
-    const daoMock: jest.Mocked<any> = {
+    const daoMock: jest.Mocked<UserBooksDaoInterface> = {
       assignBookToUser: jest.fn(),
       updateBooksUser: jest.fn(),
       removeBookFromUser: jest.fn(),
@@ -143,7 +144,7 @@ describe("UserBooks routes (mocked DAO)", () => {
   })
 
   it("should throw 404 when delete target not found", async () => {
-    const daoMock: jest.Mocked<any> = {
+    const daoMock: jest.Mocked<UserBooksDaoInterface> = {
       assignBookToUser: jest.fn(),
       updateBooksUser: jest.fn(),
       removeBookFromUser: jest.fn().mockResolvedValue(0),
@@ -157,7 +158,7 @@ describe("UserBooks routes (mocked DAO)", () => {
   })
 
   it("should delete assignment", async () => {
-    const daoMock: jest.Mocked<any> = {
+    const daoMock: jest.Mocked<UserBooksDaoInterface> = {
       assignBookToUser: jest.fn(),
       updateBooksUser: jest.fn(),
       removeBookFromUser: jest.fn().mockResolvedValue(1),
