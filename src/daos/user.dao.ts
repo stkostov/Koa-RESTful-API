@@ -29,7 +29,7 @@ export class UserDao {
         return this.db("users").insert(data).returning("*")
     }
 
-    update(id: number, patch: Partial<Omit<User, "id">>): Promise<User[] | undefined> {
+    update(id: number, patch: Partial<Omit<User, "id">>): Promise<User[]> {
         return this.db("users").where({ id }).update(patch).returning("*")
     }
 

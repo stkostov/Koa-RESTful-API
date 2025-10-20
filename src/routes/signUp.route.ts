@@ -1,10 +1,7 @@
 import Router from "@koa/router"
 import { SignUpSchema } from "../validation/signUp.validation"
-import { Knex } from "knex"
-import { UserDao } from "../daos/user.dao"
 
-export function SignUp(db:Knex, router: Router) {
-    const dao = new UserDao(db)
+export function SignUp(dao: any, router: Router) {
     router.post("/sign-up", async (ctx) => {
         try {
             const parsedData = SignUpSchema.safeParse(ctx.request.body)

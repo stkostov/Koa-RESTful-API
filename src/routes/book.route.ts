@@ -1,11 +1,8 @@
 import Router from "@koa/router"
 import type { Book } from "../types/book.type"
 import { CreateBook, UpdateBook } from "../validation/book.validation"
-import type { Knex } from "knex"
-import { BookDao } from "../daos/book.dao"
 
-export function createBooksRoutes(db: Knex, router: Router) {
-    const dao = new BookDao(db)
+export function createBooksRoutes(dao: any, router: Router) {
 
     router.get("/books", async (ctx) => {
         const rows = await dao.findAll()
@@ -61,7 +58,7 @@ export function createBooksRoutes(db: Knex, router: Router) {
 
         const patch = parsed.data as Partial<Omit<Book, "id">>
         const updated = await dao.update(id, patch)
-        if (!updated) {
+        if (updated.length === 0) {
             ctx.status = 404
             ctx.body = { error: "Book not found" }
             return

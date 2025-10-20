@@ -1,10 +1,7 @@
 // src/http/usersBooks.routes.ts
 import Router from "@koa/router"
-import type { Knex } from "knex"
-import { UserBooksDao } from "../daos/userBooks.dao"
 
-export function createUsersBooksRoutes(db: Knex, router: Router) {
-  const dao = new UserBooksDao(db)
+export function createUsersBooksRoutes(dao: any, router: Router) {
 
   router.post("/user/:userId/book/:bookId", async (ctx) => {
     const userId = Number(ctx.params.userId)

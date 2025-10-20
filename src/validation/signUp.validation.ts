@@ -6,4 +6,4 @@ export const SignUpSchema = zod.object({
     password: zod.string().min(6)
 })
 
-export const UpdateUser = SignUpSchema.partial()
+export const UpdateUser = SignUpSchema.partial().strict()

@@ -1,16 +1,12 @@
 // src/http/users.routes.ts
 import Router from "@koa/router"
-import type { Knex } from "knex"
-import { UserDao } from "../daos/user.dao"
 import type { Context } from "koa"
 import { SignUpSchema, UpdateUser } from "../validation/signUp.validation"
 
-export function createUsersRoutes(db: Knex, router: Router) {
-  const dao = new UserDao(db)
-
+export function createUsersRoutes(dao: any, router: Router) {
   router.get("/users", async (ctx) => {
     const rows = await dao.findAll()
-    console.log("ALL USERS")
+    ctx.status = 200
     ctx.body = rows
   })
 
@@ -42,7 +38,7 @@ export function createUsersRoutes(db: Knex, router: Router) {
     const books = await dao.findUserBooks(id)
     if(books?.length === 0) {
         ctx.status = 404
-        ctx.body = { error: "User not found" }
+        ctx.body = { error: "User not found or does not have books" }
         return
     }
     ctx.body = books
@@ -79,7 +75,7 @@ export function createUsersRoutes(db: Knex, router: Router) {
 
     const patch = parsed.data
     const updated = await dao.update(id, patch)
-    if (!updated) { 
+    if (updated.length === 0) { 
         ctx.status = 404 
         ctx.body = { error: "User not found" } 
         return 
@@ -96,9 +92,10 @@ export function createUsersRoutes(db: Knex, router: Router) {
     }
 
     const count = await dao.delete(id)
-    if (count === 0) { ctx.status = 404 
-        ctx.body = { error: "User not found" } 
-        return 
+    if (count === 0) { 
+      ctx.status = 404 
+      ctx.body = { error: "User not found" } 
+      return 
     }
     ctx.status = 204
   })

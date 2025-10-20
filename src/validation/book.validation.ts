@@ -6,4 +6,4 @@ export const CreateBook = zod.object({
   date: zod.string().optional(),
 });
 
-export const UpdateBook = CreateBook.partial()
+export const UpdateBook = CreateBook.partial().strict()

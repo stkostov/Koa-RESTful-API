@@ -8,6 +8,9 @@ import { createBooksRoutes } from "./routes/book.route"
 import Router from "@koa/router"
 import dotenv from "dotenv"
 import { db } from "./config/knex"
+import { UserDao } from "./daos/user.dao"
+import { BookDao } from "./daos/book.dao"
+import { UserBooksDao } from "./daos/userBooks.dao"
 import { SignUp } from "./routes/signUp.route"
 import { createUsersRoutes } from "./routes/user.route"
 import { createUsersBooksRoutes } from "./routes/userBooks.route"
@@ -17,14 +20,13 @@ const router = new Router()
 dotenv.config()
 const PORT = Number(process.env.PORT)
 const SECRET = process.env.SECRET as string
-const database = db
 
 
 app.use(bodyParser())
 app.use(logger())
 
-SignUp(database, router)
-SignIn(database, router, (userId: string) =>
+SignUp(new UserDao(db), router)
+SignIn(new UserDao(db), router, (userId: string) =>
   jsonwebtoken.sign({ sub: userId }, SECRET, { expiresIn: "7H" })
 )
 
@@ -34,9 +36,9 @@ app.use(
     .unless({ path: [/^\/sign-up$/, /^\/sign-in$/] })
 )
 
-createUsersRoutes(database, router)
-createBooksRoutes(database, router)
-createUsersBooksRoutes(database, router)
+createUsersRoutes(new UserDao(db), router)
+createBooksRoutes(new BookDao(db), router)
+createUsersBooksRoutes(new UserBooksDao(db), router)
 
 app.use(router.routes())
 app.use(router.allowedMethods())
